@@ -17,14 +17,13 @@ MAX_REPOS = 10
 CSV_FILE = "agile_estimation_dataset.csv"
 
 fieldnames = [
-    "name", "stars", "estimated_loc", "age_days",
+    "name","language", "stars", "estimated_loc", "age_days",
     "total_commits", "velocity_sprint", 
     "active_contributors", "avg_lead_time_days", 
     "integration_complexity", "bug_ratio"
 ]
 
-def get_data():
-    
+def get_data():   
     now = datetime.now(timezone.utc)
     try:
         user = g.get_user()

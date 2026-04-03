@@ -1,0 +1,11 @@
+name,language,stars,estimated_loc,age_days,total_commits,velocity_sprint,active_contributors,avg_lead_time_days,integration_complexity,bug_ratio
+public-apis,,418698,248100,3665,4539,0.31,31,1.0,1.0,0.15
+free-programming-books,,384949,1056600,4557,10069,6.38,100,1.0,3.2,0.15
+system-design-primer,,341229,563850,3322,343,1.09,2,1.0,1.7,0.15
+awesome-python,,290456,262850,4297,2262,82.76,11,1.0,1.1,0.15
+Python,,219255,829350,3548,3652,5.13,72,1.0,4.0,0.15
+AutoGPT,,183113,22526450,1114,8150,73.11,65,1.0,6.5,0.15
+stable-diffusion-webui,,162110,1827600,1320,7689,0.0,100,1.0,1.2,0.15
+transformers,,158745,23176600,2713,22517,146.53,100,1.4,3.9,0.15
+yt-dlp,,154602,3014800,1985,23800,19.76,100,1.0,2.2,0.15
+HelloGitHub,,148634,486500,3621,224,0.62,1,4.9,1.2,0.15
