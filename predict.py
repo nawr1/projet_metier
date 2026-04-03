@@ -1,88 +1,49 @@
 import pandas as pd
-import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
-from github import Github, Auth
-from dotenv import load_dotenv
-import os
+import joblib
+from sentence_transformers import SentenceTransformer
 
-load_dotenv()
-auth = Auth.Token(os.getenv("GITHUB_TOKEN"))
-g = Github(auth=auth)
-
-# =============================
-# 1. RETRAIN MODEL ON FULL DATA
-# =============================
-df = pd.read_csv("repos_dataset.csv")
-df = df.drop(columns=["name", "language"]).dropna()
-
-X = df.drop(columns=["commits_count"])
-y = df["commits_count"]
-
-rf = RandomForestRegressor(n_estimators=100, random_state=42)
-rf.fit(X, y)
-print("✅ Model retrained on full dataset")
-
-# =============================
-# 2. FETCH NEW REPO
-# =============================
-repo_name = input("\n🔍 Enter repo name (e.g. facebook/react): ").strip()
-
+# 1. CHARGER L'IA ET BERT
+print(" Réveil de BERT et du modèle prédictif...")
 try:
-    repo = g.get_repo(repo_name)
-    print(f"\n📦 Fetching data for: {repo.full_name}")
+    rf = joblib.load("modele_rf_complet.pkl")
+    bert_model = SentenceTransformer('all-MiniLM-L6-v2')
+except:
+    print(" Fais d'abord tourner model.py !")
+    exit()
 
-    # Fetch features
-    languages = repo.get_languages()
-    total_bytes = sum(int(v) for v in languages.values() if isinstance(v, int))
-    estimated_loc = total_bytes / 40
+print("\n" + "="*50)
+print(" SIMULATEUR AGILE : IA (BERT + RADON)")
+print("="*50)
 
-    contributors_count = repo.get_contributors().totalCount
-    closed_issues = repo.get_issues(state="closed", labels=[]).totalCount
-    pull_requests = repo.get_pulls(state="closed").totalCount
-    age_days = (repo.updated_at - repo.created_at).days
+# 2. INFORMATIONS DONNÉES PAR LE CHEF DE PROJET
+print("\n Nouveau Ticket :")
+titre = input("Titre du ticket : ")
+description = input("Description de la tâche : ")
 
-    new_repo = {
-        "stars": repo.stargazers_count,
-        "forks": repo.forks_count,
-        "size_kb": repo.size,
-        "estimated_loc": int(estimated_loc),
-        "contributors_count": contributors_count,
-        "closed_issues": closed_issues,
-        "pull_requests": pull_requests,
-        "age_days": age_days,
-    }
+print("\n Contexte Technique :")
+experience = int(input("Historique du dev assigné (Nombre de commits passés) : "))
+complexite = float(input("Complexité cyclomatique estimée du code (Ex: 1.0 (facile) à 15.0 (horrible)) : "))
 
-    print("\n📊 Repo Features:")
-    for key, value in new_repo.items():
-        print(f"   {key}: {value:,}")
+# 3. L'IA FAIT SON CALCUL
+print("\n BERT lit le texte...")
+texte_complet = titre + ". " + description
+texte_emb = bert_model.encode([texte_complet])
 
-    # =============================
-    # 3. PREDICT
-    # =============================
-    input_df = pd.DataFrame([new_repo])
-    predicted_commits = rf.predict(input_df)[0]
+print(" Combinaison des métriques agiles...")
+X_texte_df = pd.DataFrame(texte_emb)
+X_numerique_df = pd.DataFrame({"dev_experience": [experience], "code_complexity": [complexite]})
 
-    # Get real commits to compare
-    real_commits = repo.get_commits().totalCount
+# Fusion exacte comme dans model.py
+X_input = pd.concat([X_numerique_df, X_texte_df], axis=1)
+X_input.columns = X_input.columns.astype(str)
 
-    print("\n" + "="*40)
-    print("🎯 PREDICTION RESULTS")
-    print("="*40)
-    print(f"   Predicted commits (effort) : {predicted_commits:,.0f}")
-    print(f"   Real commits               : {real_commits:,}")
-    diff = abs(predicted_commits - real_commits)
-    accuracy = 100 - (diff / real_commits * 100)
-    print(f"   Difference                 : {diff:,.0f} commits")
-    print(f"   Accuracy                   : {accuracy:.1f}%")
+# 4. VERDICT
+heures_estimees = rf.predict(X_input)[0]
+jours_estimes = heures_estimees / 8
 
-    if accuracy > 80:
-        print("\n✅ Great prediction!")
-    elif accuracy > 60:
-        print("\n⚠️ Decent prediction — more training data would help")
-    else:
-        print("\n❌ Weak prediction — we need more repos in training data (try 100)")
-
-except Exception as e:
-    print(f"❌ Error: {e}")
-    print("Make sure the repo name is correct (e.g. facebook/react)")
+print("\n" + "="*40)
+print(" ESTIMATION DE L'EFFORT (TIME-TO-RESOLVE)")
+print("="*40)
+print(f"Heures brutes : {heures_estimees:.1f} heures de travail")
+print(f"Sprint Agile  : ~{jours_estimes:.1f} Jours")
+print("="*40)
