@@ -1,0 +1,8 @@
+# Ignorer les mots de passe et tokens
+.env
+__pycache__/
+*.pyc
+*.csv
+*.png
+.DS_Store
+ 
