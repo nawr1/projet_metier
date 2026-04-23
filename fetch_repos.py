@@ -29,7 +29,7 @@ fieldnames = [
     "repo_name", "pr_number", "story_points", "code_churn", "files_changed",
     "review_cycles", "pr_comments", "refactoring_ratio", "commit_velocity",
     "velocity_sprint", "active_contributors", "stars", "ai_mentions",
-    "ai_commits", "duration_hours"
+    "ai_commits"
 ]
 
 def extract_story_points(pr):
@@ -121,6 +121,8 @@ def get_data():
                         continue  # On ignore les micro-fixes
 
                     refactor_ratio = round(pr.deletions / churn, 4) if churn > 0 else 0
+                    
+                    # Calcul interne pour commit_velocity (non exporté)
                     duration_hours = max((pr.merged_at - pr.created_at).total_seconds() / 3600, 1)
 
                     # Review cycles
@@ -146,8 +148,7 @@ def get_data():
                         "active_contributors": active_contributors,
                         "stars": repo.stargazers_count,
                         "ai_mentions": ai_mentions,
-                        "ai_commits": ai_commits,
-                        "duration_hours": round(duration_hours, 2)
+                        "ai_commits": ai_commits
                     })
                     pr_collected += 1
                     print(f"  > PR #{pr.number} | SP: {story_points}", end="\r")
