@@ -19,15 +19,17 @@ g = Github(auth=Auth.Token(token), per_page=100)
 
 # CONFIGURATION
 LANGUAGE = "python"
-MAX_REPOS = 2             # Pour tester rapidement
+MAX_REPOS = 100       
 MAX_PRS_PER_REPO = 30     
 PR_CSV_FILE = "agile_pr_level.csv"
 PROJECT_CSV_FILE = "agile_project_level.csv"
 
 # Regex pour les Story Points
 SP_LABEL_PATTERNS =[
-    r"^sp[:\-\s]?(\d+)$", r"^story[\-\s]?points?[:\-\s]?(\d+)$",
-    r"^points?[:\-\s]?(\d+)$", r"^size[:\-\s]?(xs|s|m|l|xl)$"
+    r"^sp[:\-\s]?(\d+)$", 
+    r"^story[\-\s]?points?[:\-\s]?(\d+)$",
+    r"^points?[:\-\s]?(\d+)$", 
+    r"^size[:\-\s]?(xs|s|m|l|xl)$"
 ]
 SIZE_MAP = {"xs": 1, "s": 2, "m": 3, "l": 5, "xl": 8}
 FIBONACCI_VALID = {1, 2, 3, 5, 8, 13, 21, 34, 55}
@@ -78,11 +80,17 @@ def extract_pre_coding_features(pr):
     
     desc_length = len(pr.body or "")
     subtasks = (pr.body or "").count("- [ ]") + (pr.body or "").count("- [x]")
+    tenure_days = 0
+    if pr.user:
+        try:
+            tenure_days = (pr.created_at - pr.user.created_at).days
+        except Exception:
+            tenure_days = 0
     
-    tenure_days = (pr.created_at - pr.user.created_at).days if pr.user else 0
-    
-    try: participants = len(set(c.user.login for c in pr.get_issue_comments() if c.user))
-    except: participants = 1
+    try: 
+        participants = len(set(c.user.login for c in pr.get_issue_comments() if c.user))
+    except: 
+        participants = 1
 
     return title, body, desc_length, subtasks, max(tenure_days, 0), max(participants, 1)
 
