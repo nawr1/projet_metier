@@ -144,27 +144,40 @@ def extract_post_and_ai_features(pr):
     return churn, cyclo_complexity, test_coverage, ai_mentions, ai_gen_ratio, ai_speed_proxy, round(duration_hours, 2), is_ai_assisted
 
 def extract_data():
+    # 1. On crée un ensemble pour suivre les dépôts déjà traités pendant cette session
+    repos_traites = set() 
+    
     six_months_ago = datetime.now(timezone.utc) - timedelta(days=180)
     repos_search = g.search_repositories(query=f"language:{LANGUAGE} stars:>1000 fork:false", sort="stars", order="desc")
-    
-    with open(PR_CSV_FILE, "a", newline="", encoding="utf-8") as fpr, \
-         open(PROJECT_CSV_FILE, "a", newline="", encoding="utf-8") as fproj:
+    # On utilise "w" pour repartir sur un fichier propre à chaque lancement
+    with open(PR_CSV_FILE, "w", newline="", encoding="utf-8") as fpr, \
+         open(PROJECT_CSV_FILE, "w", newline="", encoding="utf-8") as fproj:
         
         writer_pr = csv.DictWriter(fpr, fieldnames=FIELDNAMES_PR, quoting=csv.QUOTE_MINIMAL)
         writer_proj = csv.DictWriter(fproj, fieldnames=FIELDNAMES_PROJECT)
         
-        if os.stat(PR_CSV_FILE).st_size == 0: writer_pr.writeheader()
-        if os.stat(PROJECT_CSV_FILE).st_size == 0: writer_proj.writeheader()
+        # Comme on est en mode "w", on écrit l'en-tête systématiquement
+        writer_pr.writeheader()
+        writer_proj.writeheader()
 
         repo_idx = 0
         for repo in repos_search:
+            # --- VERIFICATION DES DOUBLONS ICI ---
+            if repo.full_name in repos_traites:
+                continue # On passe au suivant s'il est déjà là
+            
             if repo_idx >= MAX_REPOS: break
             
+            # Vérification si le repo utilise des Story Points
             try:
-                if not any(any(re.match(p, l.name.lower()) for p in SP_LABEL_PATTERNS) for l in repo.get_labels()): continue
+                if not any(any(re.match(p, l.name.lower()) for p in SP_LABEL_PATTERNS) for l in repo.get_labels()): 
+                    continue
             except: continue
 
-            print(f"\n[+] Analyse du Projet : {repo.full_name}...")
+            # Marquer le repo comme "vu" pour ne plus le traiter
+            repos_traites.add(repo.full_name)
+
+            print(f"\n[+] Analyse du Projet {repo_idx+1}/{MAX_REPOS} : {repo.full_name}...")
             prs = repo.get_pulls(state='closed', sort='updated', direction='desc')
             
             proj_sp, proj_hours, proj_desc, proj_churn, proj_ai_gen, proj_ai_mentions, pr_count = 0, 0, 0, 0, 0, 0, 0
