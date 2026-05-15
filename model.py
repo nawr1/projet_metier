@@ -15,15 +15,20 @@ CSV_FILE = "agile_pr_level.csv"
 
 def clean_description(text):
     if pd.isna(text): return ""
+    text = re.sub(r'[^\w\s\d\(\)\[\]\.\,\!\?\:\'\-\/]', ' ', text)
     text = text.lower()
-    # 1. Supprimer les blocs de "Contribution Guidelines" (Le bruit majeur)
+    #  Supprimer les blocs de "Contribution Guidelines" (Boilerplate)
     text = re.sub(r"\[!!important\].*?guidelines\]\(.*?\)", "", text, flags=re.DOTALL)
-    # 2. Supprimer les URLs
+    
+    # Supprimer les URLs
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    # 3. Supprimer les balises Markdown (##, **, etc.)
+    
+    # Supprimer les balises Markdown inutiles (##, **, etc.)
     text = re.sub(r'[#\*_>\-]', ' ', text)
-    # 4. Supprimer les espaces multiples
+    
+    #  Nettoyer les espaces multiples
     text = re.sub(r'\s+', ' ', text).strip()
+    
     return text
 
 def train_model():
