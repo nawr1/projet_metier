@@ -18,8 +18,8 @@ if not token:
 g = Github(auth=Auth.Token(token), per_page=100)
 
 # CONFIGURATION
-LANGUAGE = "python"
-MAX_REPOS = 100       
+LANGUAGE = "typescript"
+MAX_REPOS = 70       
 MAX_PRS_PER_REPO = 30     
 PR_CSV_FILE = "agile_pr_level.csv"
 PROJECT_CSV_FILE = "agile_project_level.csv"
@@ -37,16 +37,14 @@ AI_KEYWORDS =["copilot", "gpt", "llm", "openai", "claude", "cursor", "generated 
 
 FIELDNAMES_PR =[
     "repo_name", "pr_number", "story_points",
-    # --- FEATURES A PRIORI (Pour prédire les Story Points) ---
+    # --- FEATURES A PRIORI ---
     "pre_coding_title", "pre_coding_description",
     "pre_coding_desc_length", "pre_coding_subtasks",
     "pre_coding_author_tenure_days", "pre_coding_discussion_participants",
     
-    # --- NOUVEAU : LA VARIABLE TEMPS (Cible pour prédire les heures) ---
-    "actual_duration_hours", 
-    "is_ai_assisted", # <-- Flag Binaire (1 ou 0) très utile pour le ML
+    "is_ai_assisted", # Flag Binaire (1 ou 0)
     
-    # --- FEATURES A POSTERIORI & IA DÉTAILLÉES (Audit) ---
+    # --- FEATURES A POSTERIORI & IA DÉTAILLÉES ---
     "post_coding_churn", "post_coding_cyclomatic_proxy", 
     "post_coding_test_coverage_ratio",
     "ai_mentions", "ai_generation_ratio", "ai_speed_proxy"
@@ -54,7 +52,6 @@ FIELDNAMES_PR =[
 
 FIELDNAMES_PROJECT =[
     "repo_name", "total_prs_analyzed", "total_story_points_project",
-    "total_duration_hours_project", # <-- Temps total du projet
     "avg_pre_coding_desc_length", "total_post_coding_churn",
     "avg_ai_generation_ratio", "total_ai_mentions"
 ]
@@ -95,25 +92,20 @@ def extract_pre_coding_features(pr):
     return title, body, desc_length, subtasks, max(tenure_days, 0), max(participants, 1)
 
 def extract_post_and_ai_features(pr):
-    # CALCUL DU TEMPS RÉEL
-    created = pr.created_at
-    merged = pr.merged_at
-    duration_hours = max((merged - created).total_seconds() / 3600, 0.5)
-
     churn = pr.additions + pr.deletions
-    if churn == 0: return 0, 0, 0, 0, 0, 0, round(duration_hours, 2), 0
+    if churn == 0: return 0, 0, 0, 0, 0, 0, 0
 
     ai_gen_ratio = round(pr.additions / (pr.deletions + 1), 2)
     ai_mentions = 0
     ai_speed_proxy = 0
-    is_ai_assisted = 0 # Par défaut Non
+    is_ai_assisted = 0 
 
     try:
         commits = list(pr.get_commits())
         for c in commits:
             if any(kw in c.commit.message.lower() for kw in AI_KEYWORDS):
                 ai_mentions += 1
-                is_ai_assisted = 1 # On est sûr que l'IA a été utilisée
+                is_ai_assisted = 1 
         
         if len(commits) > 1:
             first_time = commits[0].commit.author.date
@@ -122,7 +114,6 @@ def extract_post_and_ai_features(pr):
             ai_speed_proxy = round(churn / commit_duration, 2)
     except: pass
 
-    # Règle de suspicion si comportement robotique massif
     if is_ai_assisted == 0 and ai_gen_ratio > 10 and churn > 300:
         is_ai_assisted = 1
 
@@ -141,95 +132,94 @@ def extract_post_and_ai_features(pr):
 
     test_coverage = round(test_lines / src_lines, 4) if src_lines > 0 else 0.0
 
-    return churn, cyclo_complexity, test_coverage, ai_mentions, ai_gen_ratio, ai_speed_proxy, round(duration_hours, 2), is_ai_assisted
+    return churn, cyclo_complexity, test_coverage, ai_mentions, ai_gen_ratio, ai_speed_proxy, is_ai_assisted
 
 def extract_data():
-    # 1. On crée un ensemble pour suivre les dépôts déjà traités pendant cette session
     repos_traites = set() 
-    
     six_months_ago = datetime.now(timezone.utc) - timedelta(days=180)
     repos_search = g.search_repositories(query=f"language:{LANGUAGE} stars:>1000 fork:false", sort="stars", order="desc")
-    # On utilise "w" pour repartir sur un fichier propre à chaque lancement
+    
     with open(PR_CSV_FILE, "w", newline="", encoding="utf-8") as fpr, \
          open(PROJECT_CSV_FILE, "w", newline="", encoding="utf-8") as fproj:
         
         writer_pr = csv.DictWriter(fpr, fieldnames=FIELDNAMES_PR, quoting=csv.QUOTE_MINIMAL)
         writer_proj = csv.DictWriter(fproj, fieldnames=FIELDNAMES_PROJECT)
-        
-        # Comme on est en mode "w", on écrit l'en-tête systématiquement
         writer_pr.writeheader()
         writer_proj.writeheader()
 
         repo_idx = 0
         for repo in repos_search:
-            # --- VERIFICATION DES DOUBLONS ICI ---
-            if repo.full_name in repos_traites:
-                continue # On passe au suivant s'il est déjà là
-            
             if repo_idx >= MAX_REPOS: break
+            if repo.full_name in repos_traites: continue 
             
-            # Vérification si le repo utilise des Story Points
             try:
+                # Vérification rapide des labels
                 if not any(any(re.match(p, l.name.lower()) for p in SP_LABEL_PATTERNS) for l in repo.get_labels()): 
                     continue
-            except: continue
 
-            # Marquer le repo comme "vu" pour ne plus le traiter
+                print(f"\n[+] Analyse du Projet {repo_idx+1}/{MAX_REPOS} : {repo.full_name}...")
+                
+                # --- PROTECTION ICI ---
+                try:
+                    prs = repo.get_pulls(state='closed', sort='updated', direction='desc')
+                    
+                    proj_sp, proj_desc, proj_churn, proj_ai_gen, proj_ai_mentions, pr_count = 0, 0, 0, 0, 0, 0
+
+                    # L'erreur 404 survient souvent au moment de l'itération (lazy loading)
+                    for pr in prs:
+                        if pr_count >= MAX_PRS_PER_REPO: break
+                        
+                        # Vérification de sécurité sur l'objet PR
+                        if not pr or not pr.merged_at: continue
+                        if pr.merged_at < six_months_ago: continue
+
+                        sp = extract_story_points(pr)
+                        if sp is None: continue
+
+                        title, desc, desc_len, subtasks, tenure, participants = extract_pre_coding_features(pr)
+                        churn, cyclo, test_cov, ai_mentions, ai_gen, ai_speed, is_ai = extract_post_and_ai_features(pr)
+
+                        if churn == 0: continue
+
+                        writer_pr.writerow({
+                            "repo_name": repo.name, "pr_number": pr.number, "story_points": sp,
+                            "pre_coding_title": title, "pre_coding_description": desc,
+                            "pre_coding_desc_length": desc_len, "pre_coding_subtasks": subtasks,
+                            "pre_coding_author_tenure_days": tenure, "pre_coding_discussion_participants": participants,
+                            "is_ai_assisted": is_ai,
+                            "post_coding_churn": churn, "post_coding_cyclomatic_proxy": cyclo, 
+                            "post_coding_test_coverage_ratio": test_cov,
+                            "ai_mentions": ai_mentions, "ai_generation_ratio": ai_gen, "ai_speed_proxy": ai_speed
+                        })
+                        
+                        proj_sp += sp
+                        proj_desc += desc_len
+                        proj_churn += churn
+                        proj_ai_gen += ai_gen
+                        proj_ai_mentions += ai_mentions
+                        pr_count += 1
+                        print(f"    PR #{pr.number} (SP:{sp}) | IA: {'Oui' if is_ai else 'Non'}")
+
+                    if pr_count > 0:
+                        writer_proj.writerow({
+                            "repo_name": repo.name, "total_prs_analyzed": pr_count,
+                            "total_story_points_project": proj_sp, 
+                            "avg_pre_coding_desc_length": round(proj_desc / pr_count, 2),
+                            "total_post_coding_churn": proj_churn,
+                            "avg_ai_generation_ratio": round(proj_ai_gen / pr_count, 2),
+                            "total_ai_mentions": proj_ai_mentions
+                        })
+                        repo_idx += 1
+                        fpr.flush(); fproj.flush()
+                
+                except Exception as e:
+                    print(f" [!] Erreur lors de l'accès aux PRs de {repo.full_name}: {e}")
+                    continue # On passe au repo suivant
+
+            except Exception as e:
+                print(f" [!] Erreur générale sur le repo {repo.full_name}: {e}")
+                continue
             repos_traites.add(repo.full_name)
-
-            print(f"\n[+] Analyse du Projet {repo_idx+1}/{MAX_REPOS} : {repo.full_name}...")
-            prs = repo.get_pulls(state='closed', sort='updated', direction='desc')
-            
-            proj_sp, proj_hours, proj_desc, proj_churn, proj_ai_gen, proj_ai_mentions, pr_count = 0, 0, 0, 0, 0, 0, 0
-
-            for pr in prs:
-                if pr_count >= MAX_PRS_PER_REPO: break
-                if not pr.merged_at or pr.merged_at < six_months_ago: continue
-
-                sp = extract_story_points(pr)
-                if sp is None: continue
-
-                title, desc, desc_len, subtasks, tenure, participants = extract_pre_coding_features(pr)
-                churn, cyclo, test_cov, ai_mentions, ai_gen, ai_speed, dur_hours, is_ai = extract_post_and_ai_features(pr)
-
-                if churn == 0: continue
-
-                writer_pr.writerow({
-                    "repo_name": repo.name, "pr_number": pr.number, "story_points": sp,
-                    "pre_coding_title": title, "pre_coding_description": desc,
-                    "pre_coding_desc_length": desc_len, "pre_coding_subtasks": subtasks,
-                    "pre_coding_author_tenure_days": tenure, "pre_coding_discussion_participants": participants,
-                    
-                    "actual_duration_hours": dur_hours,  # <-- Les heures ajoutées ici
-                    "is_ai_assisted": is_ai,             # <-- Oui/Non (1 ou 0)
-                    
-                    "post_coding_churn": churn, "post_coding_cyclomatic_proxy": cyclo, 
-                    "post_coding_test_coverage_ratio": test_cov,
-                    "ai_mentions": ai_mentions, "ai_generation_ratio": ai_gen, "ai_speed_proxy": ai_speed
-                })
-                
-                proj_sp += sp
-                proj_hours += dur_hours
-                proj_desc += desc_len
-                proj_churn += churn
-                proj_ai_gen += ai_gen
-                proj_ai_mentions += ai_mentions
-                pr_count += 1
-                
-                print(f"    PR #{pr.number} (SP:{sp}) | IA: {'Oui' if is_ai else 'Non'} | Temps: {dur_hours}h")
-
-            if pr_count > 0:
-                writer_proj.writerow({
-                    "repo_name": repo.name, "total_prs_analyzed": pr_count,
-                    "total_story_points_project": proj_sp, 
-                    "total_duration_hours_project": round(proj_hours, 2), # <-- Le temps total du projet
-                    "avg_pre_coding_desc_length": round(proj_desc / pr_count, 2),
-                    "total_post_coding_churn": proj_churn,
-                    "avg_ai_generation_ratio": round(proj_ai_gen / pr_count, 2),
-                    "total_ai_mentions": proj_ai_mentions
-                })
-                repo_idx += 1
-                fpr.flush(); fproj.flush()
 
     print(f"\nTerminé ! Données sauvegardées.")
 
