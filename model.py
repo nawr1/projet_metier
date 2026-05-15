@@ -1,95 +1,92 @@
-#!/usr/bin/env python3
 import pandas as pd
 import numpy as np
 import pickle
 import re
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder, StandardScaler, OneHotEncoder
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.base import BaseEstimator, TransformerMixin
 from xgboost import XGBClassifier
+from sentence_transformers import SentenceTransformer
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline as ImbPipeline
 
 CSV_FILE = "agile_pr_level.csv"
 
+# --- FONCTION DE REGROUPEMENT (T-SHIRT SIZING) ---
+def map_to_tshirt_size(sp):
+    if sp <= 2:
+        return 0  # SMALL (1-2)
+    elif sp <= 5:
+        return 1  # MEDIUM (3-5)
+    else:
+        return 2  # LARGE (8+)
+
+class SemanticTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, model_name='all-MiniLM-L6-v2'):
+        self.model_name = model_name
+        self.model = SentenceTransformer(model_name)
+    def fit(self, X, y=None): return self
+    def transform(self, X):
+        print(f"Génération des embeddings pour {len(X)} lignes...")
+        return self.model.encode(X.tolist(), show_progress_bar=False)
+
 def clean_description(text):
     if pd.isna(text): return ""
-    text = re.sub(r'[^\w\s\d\(\)\[\]\.\,\!\?\:\'\-\/]', ' ', text)
-    text = text.lower()
-    #  Supprimer les blocs de "Contribution Guidelines" (Boilerplate)
-    text = re.sub(r"\[!!important\].*?guidelines\]\(.*?\)", "", text, flags=re.DOTALL)
-    
-    # Supprimer les URLs
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    
-    # Supprimer les balises Markdown inutiles (##, **, etc.)
     text = re.sub(r'[#\*_>\-]', ' ', text)
-    
-    #  Nettoyer les espaces multiples
     text = re.sub(r'\s+', ' ', text).strip()
-    
     return text
 
 def train_model():
     try:
         df = pd.read_csv(CSV_FILE)
-        # Nettoyage initial
         df = df.dropna(subset=['story_points'])
-        # On garde les classes qui ont au moins 5 exemples pour que l'IA apprenne vraiment
-        df = df[df.groupby('story_points')['story_points'].transform('count') >= 5]
+        
+        # --- ETAPE CRUCIALE : REGROUPEMENT ---
+        df['story_points_grouped'] = df['story_points'].apply(map_to_tshirt_size)
+        
+        # On s'assure d'avoir assez d'exemples par groupe
+        df = df[df.groupby('story_points_grouped')['story_points_grouped'].transform('count') >= 5]
     except Exception as e:
-        print(f"Erreur chargement: {e}")
+        print(f"Erreur : {e}")
         return
 
-    print("--- NETTOYAGE ET FEATURE ENGINEERING ---")
-    
-    # Nettoyage du texte
+    print(f"Nouvelle distribution (S/M/L) : \n{df['story_points_grouped'].value_counts()}")
+
     df['clean_text'] = (df['pre_coding_title'].fillna('') + " " + 
                         df['pre_coding_description'].apply(clean_description))
 
-    # On convertit le booléen en chiffre (0 ou 1)
-    df['is_ai_assisted'] = df['is_ai_assisted'].astype(int)
-
-    # Sélection des colonnes (On en ajoute 3 nouvelles !)
-    features = [
-        'clean_text', 
-        'pre_coding_subtasks', 
-        'pre_coding_desc_length',
-        'pre_coding_author_tenure_days',        # Nouvel indicateur
-        'pre_coding_discussion_participants',   # Nouvel indicateur
-        'is_ai_assisted'                        # Nouvel indicateur
-    ]
+    # Features incluant le repo_name
+    X = df[['repo_name', 'clean_text', 'pre_coding_subtasks', 'pre_coding_desc_length', 
+            'pre_coding_author_tenure_days', 'pre_coding_discussion_participants', 'is_ai_assisted']]
     
-    X = df[features]
-    le = LabelEncoder()
-    y = le.fit_transform(df['story_points'].astype(int))
+    y = df['story_points_grouped']
+    # On garde les noms originaux pour le rapport final
+    target_names = ["SMALL (1-2)", "MEDIUM (3-5)", "LARGE (8+)"]
 
-    # PIPELINE
-    # On sépare le texte (TF-IDF) et les nombres (StandardScaler pour XGBoost)
     preprocessor = ColumnTransformer(
         transformers=[
-            ('text', TfidfVectorizer(max_features=2000, ngram_range=(1, 2), stop_words='english'), 'clean_text'),
+            ('repo', OneHotEncoder(handle_unknown='ignore'), ['repo_name']),
+            ('text', SemanticTransformer(), 'clean_text'),
             ('num', StandardScaler(), [
-                'pre_coding_subtasks', 
-                'pre_coding_desc_length', 
-                'pre_coding_author_tenure_days', 
-                'pre_coding_discussion_participants',
-                'is_ai_assisted'
+                'pre_coding_subtasks', 'pre_coding_desc_length', 
+                'pre_coding_author_tenure_days', 'pre_coding_discussion_participants', 'is_ai_assisted'
             ])
         ]
     )
 
-    model = Pipeline([
+    # Paramètres optimisés pour un petit dataset et 3 classes
+    model_pipeline = ImbPipeline([
         ('preprocessor', preprocessor),
+        ('smote', SMOTE(random_state=42, k_neighbors=2)),
         ('classifier', XGBClassifier(
             n_estimators=150,
-            learning_rate=0.05,
-            max_depth=3,            # On réduit la profondeur (évite de créer des règles trop complexes)
-            min_child_weight=4,     # Empêche l'IA de se baser sur des cas trop isolés
-            reg_lambda=20,          # L2 Regularization : Force l'IA à ne pas trop compter sur une seule colonne
-            reg_alpha=5,            # L1 Regularization : Aide à ignorer les données peu importantes
+            learning_rate=0.03, # Apprentissage plus lent
+            max_depth=4,        # Arbres moins profonds pour éviter le sur-apprentissage
             subsample=0.8,
+            colsample_bytree=0.8,
             random_state=42,
             eval_metric='mlogloss'
         ))
@@ -99,20 +96,20 @@ def train_model():
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    print(f"Entraînement sur {len(X_train)} lignes...")
-    model.fit(X_train, y_train)
+    print("Entraînement en cours...")
+    model_pipeline.fit(X_train, y_train)
 
-    # EVALUATION
-    y_pred = model.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
+    y_pred = model_pipeline.predict(X_test)
     
-    print("\n================ REPORT ================")
-    print(f"Nouvelle Précision : {acc:.2%}")
-    # Affiche le détail par Story Point (pour voir où il se trompe)
-    print(classification_report(y_test, y_pred, target_names=[str(c) for c in le.classes_]))
+    print("\n Report")
+    print(f"Précision T-Shirt Sizing : {accuracy_score(y_test, y_pred):.2%}")
+    # On ajuste les target_names selon les classes réellement présentes dans y_test
+    present_classes = [target_names[i] for i in sorted(y_test.unique())]
+    print(classification_report(y_test, y_pred, target_names=present_classes))
 
-    with open('model_v2.pkl', 'wb') as f:
-        pickle.dump({'model': model, 'encoder': le}, f)
+    # Sauvegarde du nouveau modèle
+    with open('model_tshirt_v1.pkl', 'wb') as f:
+        pickle.dump(model_pipeline, f)
 
 if __name__ == "__main__":
     train_model()
