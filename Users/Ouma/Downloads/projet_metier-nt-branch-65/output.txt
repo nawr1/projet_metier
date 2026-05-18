@@ -1,0 +1,411 @@
+████████████████████████████████████| 199/199 [00:00<00:00, 3978.68it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 3760.06it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5555.30it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5234.56it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5093.41it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5310.06it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5180.66it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5401.60it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5335.41it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5298.12it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5276.42it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5361.36it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5270.99it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5199.41it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 4766.28it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5365.46it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5234.92it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5409.37it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 4746.77it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5486.07it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5121.69it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5507.39it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5286.82it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 4967.34it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 4893.74it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5160.23it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 3902.43it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5645.97it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 1481.94it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 2015.34it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5471.36it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5584.17it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5258.57it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5042.05it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5495.17it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5686.32it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 4569.43it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5919.24it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1588 lignes...
+Génération des embeddings pour 795 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5017.80it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5257.21it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 4773.26it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5251.99it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 1589 lignes...
+Génération des embeddings pour 794 lignes...
+Loading weights: 100%|█████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 16647.05it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5289.83it/s]
+BertModel LOAD REPORT from: BAAI/bge-small-en-v1.5
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Génération des embeddings pour 2383 lignes...
+Meilleurs paramètres trouvés : {'classifier__learning_rate': 0.1, 'classifier__max_depth': 5, 'classifier__n_estimators': 150}
+Génération des embeddings pour 596 lignes...
+
+Report Final
+Précision T-Shirt Sizing : 64.77%
+              precision    recall  f1-score   support
+
+ SMALL (1-2)       0.73      0.72      0.73       301
+MEDIUM (3-5)       0.59      0.63      0.61       248
+  LARGE (8+)       0.34      0.26      0.29        47
+
+    accuracy                           0.65       596
+   macro avg       0.56      0.54      0.54       596
+weighted avg       0.64      0.65      0.64       596
+
+Modèle sauvegardé sous 'model_agile.pkl'.

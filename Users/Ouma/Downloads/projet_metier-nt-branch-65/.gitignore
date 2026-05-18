@@ -1,0 +1,6 @@
+# Ignorer les mots de passe et tokens
+.env
+*.sqlite
+*.joblib
+*.pkl
+__pycache__/
