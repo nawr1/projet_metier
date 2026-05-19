@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle
 import os
-from src.predict import clean_input # On réutilise le nettoyage de predict.py
+from tests.predict import clean_input # On réutilise le nettoyage de predict.py
 
 MODEL_PATH = "models/model_tshirt_v1.pkl"
 
