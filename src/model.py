@@ -45,18 +45,34 @@ def train_model():
     # 1. Chargement
     df = pd.read_csv(INPUT_FILE)
     
+<<<<<<< HEAD
     # 2. Création de la cible
+=======
+    # 2. CRÉATION DE LA COLONNE MANQUANTE (L'erreur était ici)
+    print("Groupement des Story Points en tailles T-Shirt...")
+>>>>>>> 4038422 (first commit)
     df['story_points_grouped'] = df['story_points'].apply(map_to_tshirt_size)
 
     # 3. Préparation des données
     features_num = ['pre_coding_subtasks', 'pre_coding_desc_length', 
                     'pre_coding_author_tenure_days', 'pre_coding_discussion_participants', 'is_ai_assisted']
+<<<<<<< HEAD
     X = df[['repo_name', 'clean_text'] + features_num]
     
     le = LabelEncoder()
     y = le.fit_transform(df['story_points_grouped'])
 
     # 4. Pipeline
+=======
+    
+    X = df[['repo_name', 'clean_text'] + features_num]
+    
+    # 4. Encodage des labels (S, M, L -> 0, 1, 2) pour XGBoost
+    le = LabelEncoder()
+    y = le.fit_transform(df['story_points_grouped'])
+
+    # 5. Pipeline
+>>>>>>> 4038422 (first commit)
     preprocessor = ColumnTransformer(transformers=[
         ('repo', OneHotEncoder(handle_unknown='ignore'), ['repo_name']),
         ('text', SemanticTransformer(), 'clean_text'),
@@ -78,6 +94,7 @@ def train_model():
     # split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
     
+<<<<<<< HEAD
     print("Entraînement du modèle...")
     model_pipeline.fit(X_train, y_train)
 
@@ -107,6 +124,19 @@ def train_model():
         pickle.dump({'pipeline': model_pipeline, 'label_encoder': le}, f)
     
     print(f"\n✔ Modèle sauvegardé dans {MODEL_PATH}")
+=======
+    print("Entraînement du modèle (cela peut prendre 1-2 minutes)...")
+    model_pipeline.fit(X_train, y_train)
+
+    # 6. Sauvegarde
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+    with open(MODEL_PATH, 'wb') as f:
+        # On sauvegarde le pipeline ET le label encoder pour pouvoir décoder plus tard
+        pickle.dump({'pipeline': model_pipeline, 'label_encoder': le}, f)
+    
+    print(f"✔ Modèle sauvegardé dans {MODEL_PATH}")
+    print(f"Score de précision : {model_pipeline.score(X_test, y_test):.2f}")
+>>>>>>> 4038422 (first commit)
 
 if __name__ == "__main__":
     train_model()
