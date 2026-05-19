@@ -45,21 +45,18 @@ def train_model():
     # 1. Chargement
     df = pd.read_csv(INPUT_FILE)
     
-    # 2. CRÉATION DE LA COLONNE MANQUANTE (L'erreur était ici)
-    print("Groupement des Story Points en tailles T-Shirt...")
+    # 2. Création de la cible
     df['story_points_grouped'] = df['story_points'].apply(map_to_tshirt_size)
 
     # 3. Préparation des données
     features_num = ['pre_coding_subtasks', 'pre_coding_desc_length', 
                     'pre_coding_author_tenure_days', 'pre_coding_discussion_participants', 'is_ai_assisted']
-    
     X = df[['repo_name', 'clean_text'] + features_num]
     
-    # 4. Encodage des labels (S, M, L -> 0, 1, 2) pour XGBoost
     le = LabelEncoder()
     y = le.fit_transform(df['story_points_grouped'])
 
-    # 5. Pipeline
+    # 4. Pipeline
     preprocessor = ColumnTransformer(transformers=[
         ('repo', OneHotEncoder(handle_unknown='ignore'), ['repo_name']),
         ('text', SemanticTransformer(), 'clean_text'),
@@ -81,17 +78,35 @@ def train_model():
     # split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
     
-    print("Entraînement du modèle (cela peut prendre 1-2 minutes)...")
+    print("Entraînement du modèle...")
     model_pipeline.fit(X_train, y_train)
 
-    # 6. Sauvegarde
+    # --- CALCUL DE L'OVERFITTING ---
+    train_score = model_pipeline.score(X_train, y_train)
+    test_score = model_pipeline.score(X_test, y_test)
+    diff = train_score - test_score
+
+    print("\n" + "="*40)
+    print("      ANALYSE DE LA PERFORMANCE")
+    print("="*40)
+    print(f"Précision sur TRAIN (vu) : {train_score:.2%}")
+    print(f"Précision sur TEST (neuf) : {test_score:.2%}")
+    print(f"Écart (Gap)              : {diff:.2%}")
+    
+    if diff > 0.10: # Si l'écart est supérieur à 10%
+        print("=> Résultat : Risque d'OVERFITTING détecté.")
+    elif diff < 0:
+        print("=> Résultat : Le modèle généralise exceptionnellement bien.")
+    else:
+        print("=> Résultat : Modèle équilibré (bonne généralisation).")
+    print("="*40)
+
+    # 5. Sauvegarde
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
     with open(MODEL_PATH, 'wb') as f:
-        # On sauvegarde le pipeline ET le label encoder pour pouvoir décoder plus tard
         pickle.dump({'pipeline': model_pipeline, 'label_encoder': le}, f)
     
-    print(f"✔ Modèle sauvegardé dans {MODEL_PATH}")
-    print(f"Score de précision : {model_pipeline.score(X_test, y_test):.2f}")
+    print(f"\n✔ Modèle sauvegardé dans {MODEL_PATH}")
 
 if __name__ == "__main__":
     train_model()
