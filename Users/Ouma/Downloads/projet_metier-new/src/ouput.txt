@@ -1,0 +1,38 @@
+Microsoft Windows [Version 10.0.26200.8457]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Ouma\Downloads\projet_metier-new>python model.py
+python: can't open file 'C:\\Users\\Ouma\\Downloads\\projet_metier-new\\model.py': [Errno 2] No such file or directory
+
+C:\Users\Ouma\Downloads\projet_metier-new>cd src
+
+C:\Users\Ouma\Downloads\projet_metier-new\src>python model.py
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|███████████████████████████████████████████████████| 103/103 [00:00<00:00, 1709.77it/s]
+BertModel LOAD REPORT from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Entraînement du modèle...
+Loading weights: 100%|███████████████████████████████████████████████████| 103/103 [00:00<00:00, 2993.59it/s]
+BertModel LOAD REPORT from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:   can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+
+========================================
+      ANALYSE DE LA PERFORMANCE
+========================================
+Précision sur TRAIN (vu) : 72.00%
+Précision sur TEST (neuf) : 62.52%
+Écart (Gap)              : 9.48%
+=> Résultat : Modèle équilibré (bonne généralisation).
+========================================
+
+✔ Modèle sauvegardé dans C:\Users\Ouma\Downloads\projet_metier-new\models\model_tshirt_v1.pkl
